@@ -22,13 +22,17 @@
         const settings = {
             bunnies: [], 
             bunnyCount: 0, 
-            maxBunnies: 100000000000, 
+            maxBunnies: 900000, 
             fps: 0, 
             lastTime: 0,
         };
 
         const bunnyImage = new Image();
-        bunnyImage.src = 'https://www.goodboydigital.com/pixijs/bunnymark/bunny.png';
+        bunnyImage.src = 'bunny.png'; 
+
+        bunnyImage.onload = () => {
+            startAddingBunnies(); 
+        };
 
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -50,7 +54,7 @@
             };
         }
 
-        for (let i = 0; i < 900000; i++) {
+        for (let i = 0; i < 50000; i++) {
             settings.bunnies.push(createBunny());
             settings.bunnyCount++;
         }
@@ -77,7 +81,7 @@
 
             ctx.fillStyle = 'white';
             ctx.font = '20px Arial';
-            ctx.fillText(`FPS: ${settings.fps.toFixed(0)} | ебанов: ${settings.bunnyCount}`, 10, 30);
+            ctx.fillText(`FPS: ${settings.fps.toFixed(0)} | ЕБАНОВ: ${settings.bunnyCount}`, 10, 30);
         }
 
         function animate(timestamp) {
@@ -91,29 +95,26 @@
             requestAnimationFrame(animate);
         }
 
-        function toggleFullScreen() {
-            if (!document.fullscreenElement) {
-                const elem = document.documentElement; 
-                if (elem.requestFullscreen) {
-                    elem.requestFullscreen();
-                } else if (elem.mozRequestFullScreen) { 
-                    elem.mozRequestFullScreen();
-                } else if (elem.webkitRequestFullscreen) { 
-                    elem.webkitRequestFullscreen();
-                } else if (elem.msRequestFullscreen) { 
-                    elem.msRequestFullscreen();
-                }
+        function addBunnies() {
+            if (settings.bunnyCount >= settings.maxBunnies) {
+                clearInterval(settings.intervalId);
+                return;
+            }
+
+            for (let i = 0; i < 100000; i++) {
+                if (settings.bunnyCount >= settings.maxBunnies) break;
+                settings.bunnies.push(createBunny());
+                settings.bunnyCount++;
             }
         }
 
-
-        window.onload = () => {
-            toggleFullScreen();
-        };
+        function startAddingBunnies() {
+            settings.intervalId = setInterval(addBunnies, 1000);
+        }
 
         canvas.addEventListener('click', () => {
             if (settings.bunnyCount < settings.maxBunnies) {
-                for (let i = 0; i < 10; i++) {
+                for (let i = 0; i < 1000000; i++) {
                     settings.bunnies.push(createBunny());
                     settings.bunnyCount++;
                 }
@@ -122,7 +123,13 @@
             }
         });
 
-        requestAnimationFrame(animate);
+        bunnyImage.onload = () => {
+            requestAnimationFrame(animate);
+        };
+
+        bunnyImage.onerror = () => {
+            alert('Не удалось загрузить изображение зайца. Проверьте путь к файлу.');
+        };
     </script>
 </body>
 </html>
