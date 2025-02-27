@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Зайцы FPS</title>
+    <title>EBAN?</title>
     <style>
         body {
             margin: 0;
@@ -19,24 +19,20 @@
     <canvas id="gameCanvas"></canvas>
 
     <script>
-        // Создаем объект для хранения параметров
         const settings = {
-            bunnies: [], // Массив для хранения зайчиков
-            bunnyCount: 0, // Количество зайчиков
-            maxBunnies: 100000000000, // Максимальное количество зайчиков
-            fps: 0, // FPS счетчик
-            lastTime: 0, // Время последнего кадра
+            bunnies: [], 
+            bunnyCount: 0, 
+            maxBunnies: 100000000000, 
+            fps: 0, 
+            lastTime: 0,
         };
 
-        // Загружаем изображение зайчика
         const bunnyImage = new Image();
         bunnyImage.src = 'https://www.goodboydigital.com/pixijs/bunnymark/bunny.png';
 
-        // Получаем контекст canvas
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
-        // Устанавливаем размер canvas
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -44,7 +40,6 @@
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
 
-        // Создаем функцию для создания зайчика
         function createBunny(x, y) {
             return {
                 x: x || Math.random() * canvas.width,
@@ -54,19 +49,16 @@
             };
         }
 
-        // Добавляем первых 5 зайчиков при старте
         for (let i = 0; i < 900000; i++) {
             settings.bunnies.push(createBunny());
             settings.bunnyCount++;
         }
 
-        // Обновляем позиции зайчиков
         function updateBunnies() {
             for (let bunny of settings.bunnies) {
                 bunny.x += bunny.velocityX;
                 bunny.y += bunny.velocityY;
 
-                // Отражение от границ экрана
                 if (bunny.x < 0 || bunny.x > canvas.width) {
                     bunny.velocityX *= -1;
                 }
@@ -76,36 +68,29 @@
             }
         }
 
-        // Рисуем зайчиков
         function drawBunnies() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             for (let bunny of settings.bunnies) {
                 ctx.drawImage(bunnyImage, bunny.x, bunny.y, 50, 50);
             }
 
-            // Отображаем FPS и количество зайчиков
             ctx.fillStyle = 'white';
             ctx.font = '20px Arial';
-            ctx.fillText(`FPS: ${settings.fps.toFixed(0)} | Зайчиков: ${settings.bunnyCount}`, 10, 30);
+            ctx.fillText(`FPS: ${settings.fps.toFixed(0)} | ебанов: ${settings.bunnyCount}`, 10, 30);
         }
 
-        // Главная функция анимации
         function animate(timestamp) {
             const deltaTime = timestamp - settings.lastTime;
             settings.lastTime = timestamp;
 
-            // Вычисляем FPS
             settings.fps = Math.round(1000 / deltaTime);
 
-            // Обновляем и рисуем зайчиков
             updateBunnies();
             drawBunnies();
 
-            // Запускаем следующий кадр
             requestAnimationFrame(animate);
         }
 
-        // Добавляем зайчиков при клике
         canvas.addEventListener('click', () => {
             if (settings.bunnyCount < settings.maxBunnies) {
                 for (let i = 0; i < 10; i++) {
@@ -117,7 +102,6 @@
             }
         });
 
-        // Запускаем анимацию
         requestAnimationFrame(animate);
     </script>
 </body>
