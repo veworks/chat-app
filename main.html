@@ -17,18 +17,17 @@
 </head>
 <body>
     <canvas id="gameCanvas"></canvas>
-
     <script>
         const settings = {
             bunnies: [], 
             bunnyCount: 0, 
-            maxBunnies: 900000, 
             fps: 0, 
             lastTime: 0,
         };
 
         const bunnyImage = new Image();
         bunnyImage.src = 'bunny.png'; 
+
 
         bunnyImage.onload = () => {
             startAddingBunnies(); 
@@ -53,6 +52,7 @@
                 velocityY: Math.random() * 6 - 3,
             };
         }
+
 
         for (let i = 0; i < 50000; i++) {
             settings.bunnies.push(createBunny());
@@ -95,37 +95,31 @@
             requestAnimationFrame(animate);
         }
 
-        function addBunnies() {
-            if (settings.bunnyCount >= settings.maxBunnies) {
-                clearInterval(settings.intervalId);
-                return;
-            }
 
-            for (let i = 0; i < 100000; i++) {
-                if (settings.bunnyCount >= settings.maxBunnies) break;
+        function addBunnies() {
+            for (let i = 0; i < 10000; i++) {
                 settings.bunnies.push(createBunny());
                 settings.bunnyCount++;
             }
         }
 
+
         function startAddingBunnies() {
-            settings.intervalId = setInterval(addBunnies, 1000);
+            settings.intervalId = setInterval(addBunnies, 1000); 
         }
 
+        // При клике на экран добавляем миллион зайцев
         canvas.addEventListener('click', () => {
-            if (settings.bunnyCount < settings.maxBunnies) {
-                for (let i = 0; i < 1000000; i++) {
-                    settings.bunnies.push(createBunny());
-                    settings.bunnyCount++;
-                }
-            } else {
-                alert('Максимальное количество зайчиков достигнуто!');
+            for (let i = 0; i < 1000000; i++) {
+                settings.bunnies.push(createBunny());
+                settings.bunnyCount++;
             }
         });
 
         bunnyImage.onload = () => {
             requestAnimationFrame(animate);
         };
+
 
         bunnyImage.onerror = () => {
             alert('Не удалось загрузить изображение зайца. Проверьте путь к файлу.');
