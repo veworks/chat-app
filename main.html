@@ -1,129 +1,163 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EBAN?</title>
+    <title>Музыкальная страница</title>
     <style>
+
         body {
             margin: 0;
-            overflow: hidden;
-            background-color: #2c3e50;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: black;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: lightgray;
+            text-align: center; 
         }
-        canvas {
-            display: block;
+
+        /* Стиль для изображения */
+        .image-container {
+            margin-bottom: 20px;
+        }
+        .image-container img {
+            width: 100px; 
+            height: auto;
+        }
+
+
+        .text-container {
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+
+        .button-container {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        button {
+            --content: 'Открыть Telegram';
+            background: #87CEFA;
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #4682B4; 
+        }
+
+
+        .button-container .left,
+        .button-container .right {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: -1;
+            transition: transform 0.5s;
+        }
+        .button-container .left {
+            left: 0;
+            transform: skewX(-20deg) translateX(-100%);
+        }
+        .button-container .right {
+            right: 0;
+            transform: skewX(20deg) translateX(100%);
+        }
+        button:hover + .left {
+            transform: skewX(-20deg) translateX(0);
+        }
+        button:hover + .right {
+            transform: skewX(20deg) translateX(0);
+        }
+
+
+        .link-container {
+            font-size: 14px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .link-container a {
+            color: gray;
+            text-decoration: none;
+        }
+        .link-container a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas"></canvas>
+
+    <div class="image-container">
+        <img src="dang.png" alt="DANG">
+    </div>
+
+
+    <div class="text-container">
+        Нажмите если музыка не запустилась автоматически
+    </div>
+
+
+    <div class="button-container">
+        <button id="openTelegramButton">Открыть Telegram</button>
+        <div class="left"></div>
+        <div class="right"></div>
+    </div>
+
+
+    <div class="link-container">
+        <a href="https://t.me/nfsprank" target="_blank">t.me/nfsprank</a>
+    </div>
+
+
+    <audio id="musicPlayer" autoplay loop>
+        <source src="music.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+
     <script>
-        const settings = {
-            bunnies: [], 
-            bunnyCount: 0, 
-            fps: 0, 
-            lastTime: 0,
+
+        const musicPlayer = document.getElementById('musicPlayer');
+        window.onload = function () {
+            musicPlayer.play().catch(error => {
+                console.log("Автовоспроизведение заблокировано браузером.");
+            });
         };
 
-        const bunnyImage = new Image();
-        bunnyImage.src = 'bunny.png'; 
 
-
-        bunnyImage.onload = () => {
-            startAddingBunnies(); 
-        };
-
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-
-        function createBunny(x, y) {
-            return {
-                x: x || Math.random() * canvas.width,
-                y: y || Math.random() * canvas.height,
-                velocityX: Math.random() * 6 - 3,
-                velocityY: Math.random() * 6 - 3,
-            };
-        }
-
-
-        for (let i = 0; i < 50000; i++) {
-            settings.bunnies.push(createBunny());
-            settings.bunnyCount++;
-        }
-
-        function updateBunnies() {
-            for (let bunny of settings.bunnies) {
-                bunny.x += bunny.velocityX;
-                bunny.y += bunny.velocityY;
-
-                if (bunny.x < 0 || bunny.x > canvas.width) {
-                    bunny.velocityX *= -1;
-                }
-                if (bunny.y < 0 || bunny.y > canvas.height) {
-                    bunny.velocityY *= -1;
-                }
-            }
-        }
-
-        function drawBunnies() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let bunny of settings.bunnies) {
-                ctx.drawImage(bunnyImage, bunny.x, bunny.y, 50, 50);
-            }
-
-            ctx.fillStyle = 'white';
-            ctx.font = '20px Arial';
-            ctx.fillText(`FPS: ${settings.fps.toFixed(0)} | ЕБАНОВ: ${settings.bunnyCount}`, 10, 30);
-        }
-
-        function animate(timestamp) {
-            const deltaTime = timestamp - settings.lastTime;
-            settings.lastTime = timestamp;
-
-            settings.fps = Math.round(1000 / deltaTime);
-            updateBunnies();
-            drawBunnies();
-
-            requestAnimationFrame(animate);
-        }
-
-
-        function addBunnies() {
-            for (let i = 0; i < 10000; i++) {
-                settings.bunnies.push(createBunny());
-                settings.bunnyCount++;
-            }
-        }
-
-
-        function startAddingBunnies() {
-            settings.intervalId = setInterval(addBunnies, 1000); 
-        }
-
-
-        canvas.addEventListener('click', () => {
-            for (let i = 0; i < 1000000; i++) {
-                settings.bunnies.push(createBunny());
-                settings.bunnyCount++;
-            }
+        document.getElementById('openTelegramButton').addEventListener('click', () => {
+            window.open("https://t.me/nfsprank", "_blank"); 
         });
 
-        bunnyImage.onload = () => {
-            requestAnimationFrame(animate);
-        };
+    
+        document.body.addEventListener('click', (event) => {
+            if (!musicPlayer.paused) return;
 
-
-        bunnyImage.onerror = () => {
-            alert('Не удалось загрузить изображение зайца. Проверьте путь к файлу.');
-        };
+   
+            if (event.target.id !== 'openTelegramButton') {
+                musicPlayer.play().catch(error => {
+                    console.log("Воспроизведение заблокировано браузером.");
+                });
+            }
+        });
     </script>
 </body>
 </html>
