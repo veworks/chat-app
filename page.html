@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> </title>
+    <title>Музыкальная страница</title>
     <style>
+
         body {
             margin: 0;
             padding: 0;
@@ -14,13 +15,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; 
+            justify-content: center;
             height: 100vh;
             color: lightgray;
             text-align: center; 
         }
 
-
+        /* Стиль для изображения */
         .image-container {
             margin-bottom: 20px;
         }
@@ -29,13 +30,13 @@
             height: auto;
         }
 
- 
+
         .text-container {
             margin-bottom: 20px;
             font-size: 16px;
         }
 
-      
+
         .button-container {
             position: relative;
             overflow: hidden;
@@ -43,8 +44,8 @@
             margin-bottom: 20px;
         }
         button {
-            --content: 'Запустить музыку';
-            background: #87CEFA; 
+            --content: 'Открыть Telegram';
+            background: #87CEFA;
             border: none;
             color: white;
             padding: 15px 30px;
@@ -61,6 +62,7 @@
         button:hover {
             background: #4682B4; 
         }
+
 
         .button-container .left,
         .button-container .right {
@@ -87,7 +89,7 @@
             transform: skewX(20deg) translateX(0);
         }
 
-        /* Стиль для ссылки */
+
         .link-container {
             font-size: 14px;
             text-align: center;
@@ -110,12 +112,12 @@
 
 
     <div class="text-container">
-        Нажмите кнопку ниже, если музыка не запустилась автоматически.
+        Нажмите если музыка не запустилась автоматически
     </div>
 
 
     <div class="button-container">
-        <button id="playButton">Запустить музыку</button>
+        <button id="openTelegramButton">Открыть Telegram</button>
         <div class="left"></div>
         <div class="right"></div>
     </div>
@@ -134,19 +136,26 @@
     <script>
 
         const musicPlayer = document.getElementById('musicPlayer');
-        window.onload = function() {
+        window.onload = function () {
             musicPlayer.play().catch(error => {
                 console.log("Автовоспроизведение заблокировано браузером.");
             });
         };
 
 
-        const playButton = document.getElementById('playButton');
-        playButton.addEventListener('click', () => {
-            if (musicPlayer.paused) {
-                musicPlayer.play();
-                playButton.textContent = "Музыка запущена";
-                playButton.disabled = true; 
+        document.getElementById('openTelegramButton').addEventListener('click', () => {
+            window.open("https://t.me/nfsprank", "_blank"); 
+        });
+
+    
+        document.body.addEventListener('click', (event) => {
+            if (!musicPlayer.paused) return;
+
+   
+            if (event.target.id !== 'openTelegramButton') {
+                musicPlayer.play().catch(error => {
+                    console.log("Воспроизведение заблокировано браузером.");
+                });
             }
         });
     </script>
