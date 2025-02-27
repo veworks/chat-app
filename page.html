@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Музыкальная страница</title>
+    <style>
+        /* Общие настройки */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: black;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Центрирование содержимого по горизонтали */
+            justify-content: center; /* Центрирование содержимого по вертикали */
+            height: 100vh;
+            color: lightgray;
+            text-align: center; /* Центрирование текста внутри элементов */
+        }
+
+        /* Стиль для изображения */
+        .image-container {
+            margin-bottom: 20px;
+        }
+        .image-container img {
+            width: 100px; /* Размер изображения можно изменить */
+            height: auto;
+        }
+
+        /* Стиль для текста */
+        .text-container {
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        /* Стиль для кнопки */
+        .button-container {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        button {
+            --content: 'Запустить музыку';
+            background: #87CEFA; /* Светло-синий цвет */
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #4682B4; /* Темно-синий цвет при наведении */
+        }
+
+        .button-container .left,
+        .button-container .right {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: -1;
+            transition: transform 0.5s;
+        }
+        .button-container .left {
+            left: 0;
+            transform: skewX(-20deg) translateX(-100%);
+        }
+        .button-container .right {
+            right: 0;
+            transform: skewX(20deg) translateX(100%);
+        }
+        button:hover + .left {
+            transform: skewX(-20deg) translateX(0);
+        }
+        button:hover + .right {
+            transform: skewX(20deg) translateX(0);
+        }
+
+        /* Стиль для ссылки */
+        .link-container {
+            font-size: 14px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .link-container a {
+            color: gray;
+            text-decoration: none;
+        }
+        .link-container a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Изображение -->
+    <div class="image-container">
+        <img src="dang.png" alt="DANG">
+    </div>
+
+    <!-- Текст -->
+    <div class="text-container">
+        Нажмите кнопку ниже, если музыка не запустилась автоматически.
+    </div>
+
+    <!-- Кнопка -->
+    <div class="button-container">
+        <button id="playButton">Запустить музыку</button>
+        <div class="left"></div>
+        <div class="right"></div>
+    </div>
+
+    <!-- Ссылка -->
+    <div class="link-container">
+        <a href="https://t.me/nfsprank" target="_blank">t.me/nfsprank</a>
+    </div>
+
+    <!-- Музыка -->
+    <audio id="musicPlayer" autoplay loop>
+        <source src="music.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        // Автоматический запуск музыки при загрузке страницы
+        const musicPlayer = document.getElementById('musicPlayer');
+        window.onload = function() {
+            musicPlayer.play().catch(error => {
+                console.log("Автовоспроизведение заблокировано браузером.");
+            });
+        };
+
+        // Запуск музыки по кнопке
+        const playButton = document.getElementById('playButton');
+        playButton.addEventListener('click', () => {
+            if (musicPlayer.paused) {
+                musicPlayer.play();
+                playButton.textContent = "Музыка запущена";
+                playButton.disabled = true; // Отключаем кнопку после первого нажатия
+            }
+        });
+    </script>
+</body>
+</html>
